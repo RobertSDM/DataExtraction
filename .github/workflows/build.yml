@@ -6,33 +6,54 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-windows:
+  windows-x64-build:
     runs-on: windows-latest
-
-    strategy:
-      matrix:
-        arch: [x64, x86]
-
+    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Python [${{ matrix.arch }}]
-        uses: actions/setup-python@v5
+      - name: Setup Python 
+        uses: actions/setup-python@v6
         with:
-          architecture: ${{ matrix.arch }}
+          architecture: x86
+          python-version: 3.8.10
 
       - name: Install uv
         uses: astral-sh/setup-uv@v6
 
-      - name: Install Dependencies
+      - name: Build Executable
         run: |
           uv sync
           ./.venv/Scripts/pyinstaller.exe main.py --onefile --name ${{secrets.APP_NAME}} --noconsole
           
-      - name: Upload Artifact for ${{ runner.os }} ${{ matrix.arch }}
+      - name: Upload Artifact Windows x64
         uses:
           actions/upload-artifact@v4
         with:
-          name: PythonWindows${{ matrix.arch }}
+          name: PythonWindows-x64
+          path: dist/${{ secrets.APP_NAME }}.exe
+
+  windows-x86-build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Setup Python 
+        uses: actions/setup-python@v6
+        with:
+          architecture: x86
+          python-version: 3.8.10
+
+      - name: Build Executable
+        run: |
+          pip install pip-tools
+          pip-compile --output-file=requirements-x86.txt requirements-x86.in
+          pip install -r requirements-x86.txt
+          ./.venv/Scripts/pyinstaller.exe main.py --onefile --name ${{secrets.APP_NAME}} --noconsole
+
+      - name: Upload Artifact Windows x64
+        uses:
+          actions/upload-artifact@v4
+        with:
+          name: PythonWindows-x86
           path: dist/${{ secrets.APP_NAME }}.exe
