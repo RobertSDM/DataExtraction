@@ -1,0 +1,61 @@
+name: Multi-Architecture Python Build
+
+on: 
+  push: 
+    branches: main
+  workflow_dispatch:
+
+jobs:
+  windows-x64-build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python 
+        uses: actions/setup-python@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Build Executable
+        run: |
+          uv sync
+          ./.venv/Scripts/pyinstaller.exe main.py --onefile --name ${{secrets.APP_NAME}} --noconsole
+          
+      - name: Upload Artifact Windows x64
+        uses:
+          actions/upload-artifact@v4
+        with:
+          name: PythonWindows-x64
+          path: dist/${{ secrets.APP_NAME }}.exe
+
+  windows-x86-build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Setup Python 
+        uses: actions/setup-python@v6
+        with:
+          architecture: x86
+          python-version: 3.8.10
+
+      - name: Generate Requirements
+        run: |
+          pip freeze > requirements.txt
+          python gen_requirements.py
+
+      - name: Build Executable
+        run: |
+          pip install pip-tools
+          pip-compile --output-file=requirements-x86.txt requirements-x86.in
+          pip install -r requirements-x86.txt
+          ./.venv/Scripts/pyinstaller.exe main.py --onefile --name ${{secrets.APP_NAME}} --noconsole
+
+      - name: Upload Artifact Windows x86
+        uses:
+          actions/upload-artifact@v4
+        with:
+          name: PythonWindows-x86
+          path: dist/${{ secrets.APP_NAME }}.exe
