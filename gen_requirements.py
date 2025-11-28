@@ -3,7 +3,13 @@ import subprocess
 
 
 def main():
-    with open("requirements.txt", "r", encoding="utf-8") as rf, open("requirements-x86.in", "w", encoding="utf-8") as wf:
+    subprocess.run(
+        ".\\.venv\\Scripts\\pip3.exe freeze > requirements.txt".split(" "),
+        check=True,
+        shell=True,
+    )
+
+    with open("requirements.txt", "r", encoding="utf-8") as rf,open("requirements-x86.in", "w", encoding="utf-8") as wf:
         fmt_content = ""
 
         for line in rf.readlines():
