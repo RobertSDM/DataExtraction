@@ -1,11 +1,12 @@
 from collections import defaultdict
+from typing import Dict, List
 
 import pyperclip
 from constants import table_columns_and_types as tcol
 import pyautogui as pyt
 
 
-def columns_position(col_line: str) -> dict[str, int]:
+def columns_position(col_line: str) -> Dict[str, int]:
     """Identify where a column start or end
 
     Args
@@ -43,9 +44,9 @@ def columns_position(col_line: str) -> dict[str, int]:
 
 
 def parse_cols(
-    table: list[str],
-    column_positions: dict[str, int],
-) -> dict[str, str]:
+    table: Dict[str],
+    column_positions: Dict[str, int],
+) -> Dict[str, str]:
     """Parse and extract the values from the columns in the provided table
 
     Args
@@ -83,7 +84,7 @@ def parse_cols(
     return dict(cols)
 
 
-def get_table(lines: list[str]) -> list[str]:
+def get_table(lines: List[str]) -> List[str]:
     """Get the table from lines
 
     Args
