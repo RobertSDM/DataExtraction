@@ -35,6 +35,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+    
       - name: Setup Python 
         uses: actions/setup-python@v6
         with:
