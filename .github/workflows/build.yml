@@ -44,6 +44,9 @@ jobs:
           architecture: x86
           python-version: 3.8.10
 
+      - name: Ensure Pip
+        run: python -m ensurepip --upgrade
+
       - name: Generate Requirements
         run: |
           python gen_requirements.py
