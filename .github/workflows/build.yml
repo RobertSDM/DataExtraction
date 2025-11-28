@@ -50,9 +50,9 @@ jobs:
       - name: Generate Requirements
         run: |
           python gen_requirements.py
-          python -m pip install pip-tools
-          python -m pip-compile --output-file=requirements-x86.txt requirements-x86.in
-          python -m pip install -r requirements-x86.txt
+          pip install pip-tools
+          pip-compile --output-file=requirements-x86.txt requirements-x86.in
+          pip install -r requirements-x86.txt
 
       - name: Build Executable
         run: |
