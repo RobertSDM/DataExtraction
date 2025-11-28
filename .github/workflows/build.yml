@@ -54,7 +54,7 @@ jobs:
           pip install pip-tools
           pip-compile --output-file=requirements-x86.txt requirements-x86.in
           pip install -r requirements-x86.txt
-          ./.venv/Scripts/pyinstaller.exe main.py --onefile --name ${{secrets.APP_NAME}} --noconsole
+          pyinstaller main.py --onefile --name ${{secrets.APP_NAME}} --noconsole
 
       - name: Upload Artifact Windows x86
         uses:
