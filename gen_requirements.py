@@ -4,7 +4,7 @@ import subprocess
 
 def main():
     subprocess.run(
-        ".\\.venv\\Scripts\\pip3.exe freeze > requirements.txt".split(" "),
+        "python -m pip freeze > requirements.txt".split(" "),
         check=True,
         shell=True,
     )
